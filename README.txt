@@ -1,156 +1,141 @@
+API DE ARTIGOS COM AUTENTICAÇÃO E AUTORIZAÇÃO
 
-# 🧩 API de Artigos com Autenticação e Autorização
+Este projeto é uma API REST desenvolvida com NestJS, utilizando JWT para autenticação
+e controle de acesso baseado em níveis de permissão (Admin, Editor e Reader).
 
-Este projeto é uma API REST desenvolvida com **NestJS**, utilizando **JWT para autenticação** e **controle de acesso por níveis de permissão** (Admin, Editor e Reader).
+A API permite o gerenciamento de artigos, garantindo que cada ação só possa ser
+executada por usuários autorizados, de acordo com seu perfil.
 
-A API permite o gerenciamento de artigos, garantindo que cada ação seja executada apenas por usuários autorizados, de acordo com seu perfil.
+--------------------------------------------------
 
----
+TECNOLOGIAS UTILIZADAS
 
-## 🚀 Tecnologias utilizadas
+- Node.js
+- NestJS
+- TypeORM
+- PostgreSQL
+- JWT (JSON Web Token)
+- bcrypt
+- Docker
+- Docker Compose
 
-* Node.js
-* NestJS
-* TypeORM
-* PostgreSQL
-* JWT (JSON Web Token)
-* bcrypt
-* Docker + Docker Compose
+--------------------------------------------------
 
----
+SUBINDO O PROJETO
 
-## 📦 Subindo o projeto
+Pré-requisitos:
+- Docker
+- Docker Compose
 
-Certifique-se de ter **Docker** e **Docker Compose** instalados.
+Passos:
 
-```bash
-docker compose up -d
-```
+1) Subir os containers
+   docker compose up -d
 
-Após subir os containers, execute o seed para criação das tabelas e usuários iniciais:
+2) Executar o seed para criar tabelas e usuários iniciais
+   docker compose exec app node dist/seed.js
 
-```bash
-docker compose exec app node dist/seed.js
-```
+--------------------------------------------------
 
----
+USUÁRIOS CRIADOS AUTOMATICAMENTE (SEED)
 
-## 👤 Usuários criados automaticamente (seed)
+O seed cria três tipos de usuários para facilitar os testes de autenticação
+e autorização:
 
-O seed cria três tipos de usuários para facilitar os testes de autorização:
+Perfil   | Email              | Senha
+----------------------------------------
+Admin    | root@local.dev     | root1234
+Editor   | editor@local.dev   | editor123
+Reader   | reader@local.dev   | reader123
 
-| Perfil | Email                                       | Senha     |
-| ------ | ------------------------------------------- | --------- |
-| Admin  | [root@local.dev](mailto:root@local.dev)     | root1234  |
-| Editor | [editor@local.dev](mailto:editor@local.dev) | editor123 |
-| Reader | [reader@local.dev](mailto:reader@local.dev) | reader123 |
+--------------------------------------------------
 
----
+AUTENTICAÇÃO
 
-## 🔐 Autenticação
+Endpoint de login:
 
-### Login
-
-```http
 POST /api/auth/login
-```
 
-**Body (JSON):**
-
-```json
+Body (JSON):
 {
   "email": "root@local.dev",
   "senha": "root1234"
 }
-```
 
-**Resposta:**
-
-```json
+Resposta:
 {
   "access_token": "JWT_TOKEN"
 }
-```
 
-Esse token deve ser enviado nas próximas requisições via **Authorization → Bearer Token**.
+O token retornado deve ser utilizado nas próximas requisições
+no header Authorization como Bearer Token.
 
----
+--------------------------------------------------
 
-## 📰 Artigos – Regras de acesso
+REGRAS DE ACESSO - ARTIGOS
 
-### 🔍 Listar artigos
-
-```http
+LISTAR ARTIGOS
 GET /api/artigos
-```
 
-* ✅ Admin
-* ✅ Editor
-* ✅ Reader
+Permissões:
+- Admin: permitido
+- Editor: permitido
+- Reader: permitido
 
----
+--------------------------------------------------
 
-### ➕ Criar artigo
-
-```http
+CRIAR ARTIGO
 POST /api/artigos
-```
 
-* ✅ Admin
-* ✅ Editor
-* ❌ Reader
+Permissões:
+- Admin: permitido
+- Editor: permitido
+- Reader: negado
 
-**Body (JSON):**
-
-```json
+Body (JSON):
 {
   "titulo": "Novo artigo",
   "conteudo": "Conteúdo do artigo"
 }
-```
 
----
+--------------------------------------------------
 
-### ✏️ Atualizar artigo
-
-```http
+ATUALIZAR ARTIGO
 PUT /api/artigos/:id
-```
 
-* ✅ Admin
-* ❌ Editor
-* ❌ Reader
+Permissões:
+- Admin: permitido
+- Editor: negado
+- Reader: negado
 
----
+--------------------------------------------------
 
-### 🗑️ Remover artigo
-
-```http
+REMOVER ARTIGO
 DELETE /api/artigos/:id
-```
 
-* ✅ Admin
-* ❌ Editor
-* ❌ Reader
+Permissões:
+- Admin: permitido
+- Editor: negado
+- Reader: negado
 
----
+--------------------------------------------------
 
-## 🧪 Testes via Postman
+TESTES VIA POSTMAN
 
-Uma **collection do Postman** acompanha o projeto, contendo:
+Uma collection do Postman acompanha o projeto, contendo:
 
-* Login por perfil (Admin, Editor, Reader)
-* Testes de GET, POST, PUT e DELETE
-* Validação de respostas **200, 403 e 401**
-* Organização clara por permissões
+- Login para Admin, Editor e Reader
+- Testes de GET, POST, PUT e DELETE
+- Validação de respostas 200, 401 e 403
+- Organização clara por permissões
 
 Basta importar a collection no Postman e executar os testes.
 
----
+--------------------------------------------------
 
-## 🔐 Segurança
+SEGURANÇA
 
-* Senhas são armazenadas de forma criptografada (bcrypt)
-* Campo `senha` não é exposto em nenhuma resposta da API
-* Controle de acesso implementado com **Guards e Decorators**
-* Token JWT carrega apenas informações essenciais do usuário
+- Senhas armazenadas de forma criptografada (bcrypt)
+- Campo senha não é exposto em nenhuma resposta da API
+- Controle de acesso implementado com Guards e Decorators
+- JWT contém apenas informações essenciais do usuário
