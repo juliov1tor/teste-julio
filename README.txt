@@ -1,156 +1,235 @@
-# 🧩 API de Artigos com Autenticação e Autorização
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>API de Artigos - NestJS</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #ffffff;
+      color: #333;
+    }
 
-Este projeto é uma API REST desenvolvida com **NestJS**, utilizando **JWT para autenticação** e **controle de acesso por níveis de permissão** (Admin, Editor e Reader).
+    h1, h2, h3 {
+      color: #222;
+    }
 
-A API permite o gerenciamento de artigos, garantindo que cada ação seja executada apenas por usuários autorizados, de acordo com seu perfil.
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
 
----
+    h2 {
+      font-size: 22px;
+      margin-top: 30px;
+    }
 
-## 🚀 Tecnologias utilizadas
+    h3 {
+      font-size: 18px;
+      margin-top: 20px;
+    }
 
-* Node.js
-* NestJS
-* TypeORM
-* PostgreSQL
-* JWT (JSON Web Token)
-* bcrypt
-* Docker + Docker Compose
+    p {
+      margin: 10px 0;
+    }
 
----
+    ul {
+      margin-left: 20px;
+    }
 
-## 📦 Subindo o projeto
+    code {
+      background-color: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
 
-Certifique-se de ter **Docker** e **Docker Compose** instalados.
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
 
-```bash
-docker compose up -d
-```
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 15px;
+    }
 
-Após subir os containers, execute o seed para criação das tabelas e usuários iniciais:
+    table, th, td {
+      border: 1px solid #ddd;
+    }
 
-```bash
-docker compose exec app node dist/seed.js
-```
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
 
----
+    th {
+      background-color: #f0f0f0;
+    }
 
-## 👤 Usuários criados automaticamente (seed)
+    .allowed {
+      color: green;
+      font-weight: bold;
+    }
 
-O seed cria três tipos de usuários para facilitar os testes de autorização:
+    .denied {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
 
-| Perfil | Email                                       | Senha     |
-| ------ | ------------------------------------------- | --------- |
-| Admin  | [root@local.dev](mailto:root@local.dev)     | root1234  |
-| Editor | [editor@local.dev](mailto:editor@local.dev) | editor123 |
-| Reader | [reader@local.dev](mailto:reader@local.dev) | reader123 |
+  <h1>🧩 API de Artigos com Autenticação e Autorização</h1>
 
----
+  <p>
+    Este projeto é uma API REST desenvolvida com <strong>NestJS</strong>,
+    utilizando <strong>JWT para autenticação</strong> e
+    <strong>controle de acesso por níveis de permissão</strong>
+    (Admin, Editor e Reader).
+  </p>
 
-## 🔐 Autenticação
+  <p>
+    A API permite o gerenciamento de artigos, garantindo que cada ação seja
+    executada apenas por usuários autorizados, de acordo com seu perfil.
+  </p>
 
-### Login
+  <h2>🚀 Tecnologias utilizadas</h2>
+  <ul>
+    <li>Node.js</li>
+    <li>NestJS</li>
+    <li>TypeORM</li>
+    <li>PostgreSQL</li>
+    <li>JWT (JSON Web Token)</li>
+    <li>bcrypt</li>
+    <li>Docker e Docker Compose</li>
+  </ul>
 
-```http
-POST /api/auth/login
-```
+  <h2>📦 Como executar o projeto</h2>
 
-**Body (JSON):**
+  <p>Certifique-se de ter <strong>Docker</strong> e <strong>Docker Compose</strong> instalados.</p>
 
-```json
-{
+  <pre><code>docker compose up -d</code></pre>
+
+  <p>Após subir os containers, execute o seed para criação das tabelas e usuários iniciais:</p>
+
+  <pre><code>docker compose exec app node dist/seed.js</code></pre>
+
+  <h2>👤 Usuários criados automaticamente (seed)</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Perfil</th>
+        <th>Email</th>
+        <th>Senha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Admin</td>
+        <td>root@local.dev</td>
+        <td>root1234</td>
+      </tr>
+      <tr>
+        <td>Editor</td>
+        <td>editor@local.dev</td>
+        <td>editor123</td>
+      </tr>
+      <tr>
+        <td>Reader</td>
+        <td>reader@local.dev</td>
+        <td>reader123</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>🔐 Autenticação</h2>
+
+  <h3>Login</h3>
+
+  <p>Endpoint:</p>
+  <pre><code>POST /api/auth/login</code></pre>
+
+  <p>Body da requisição:</p>
+
+  <pre><code>{
   "email": "root@local.dev",
   "senha": "root1234"
-}
-```
+}</code></pre>
 
-**Resposta:**
+  <p>Resposta esperada:</p>
 
-```json
-{
+  <pre><code>{
   "access_token": "JWT_TOKEN"
-}
-```
+}</code></pre>
 
-Esse token deve ser enviado nas próximas requisições via **Authorization → Bearer Token**.
+  <p>
+    O token retornado deve ser enviado nas próximas requisições via
+    <strong>Authorization: Bearer TOKEN</strong>.
+  </p>
 
----
+  <h2>📰 Artigos – Regras de acesso</h2>
 
-## 📰 Artigos – Regras de acesso
+  <h3>Listar artigos</h3>
+  <pre><code>GET /api/artigos</code></pre>
+  <p>
+    <span class="allowed">Admin</span>,
+    <span class="allowed">Editor</span>,
+    <span class="allowed">Reader</span>
+  </p>
 
-### 🔍 Listar artigos
+  <h3>Criar artigo</h3>
+  <pre><code>POST /api/artigos</code></pre>
+  <p>
+    <span class="allowed">Admin</span>,
+    <span class="allowed">Editor</span>,
+    <span class="denied">Reader</span>
+  </p>
 
-```http
-GET /api/artigos
-```
+  <h3>Atualizar artigo</h3>
+  <pre><code>PUT /api/artigos/:id</code></pre>
+  <p>
+    <span class="allowed">Admin</span>,
+    <span class="denied">Editor</span>,
+    <span class="denied">Reader</span>
+  </p>
 
-* ✅ Admin
-* ✅ Editor
-* ✅ Reader
+  <h3>Remover artigo</h3>
+  <pre><code>DELETE /api/artigos/:id</code></pre>
+  <p>
+    <span class="allowed">Admin</span>,
+    <span class="denied">Editor</span>,
+    <span class="denied">Reader</span>
+  </p>
 
----
+  <h2>🧪 Testes com Postman</h2>
 
-### ➕ Criar artigo
+  <p>
+    O projeto acompanha uma <strong>collection do Postman</strong>, contendo:
+  </p>
 
-```http
-POST /api/artigos
-```
+  <ul>
+    <li>Login por perfil (Admin, Editor e Reader)</li>
+    <li>Testes de GET, POST, PUT e DELETE</li>
+    <li>Validação de respostas 200, 401 e 403</li>
+    <li>Organização clara por nível de permissão</li>
+  </ul>
 
-* ✅ Admin
-* ✅ Editor
-* ❌ Reader
+  <h2>🔐 Considerações de segurança</h2>
 
-**Body (JSON):**
+  <ul>
+    <li>Senhas armazenadas de forma criptografada com bcrypt</li>
+    <li>Campo <code>senha</code> não é exposto nas respostas da API</li>
+    <li>Controle de acesso implementado com Guards e Decorators</li>
+    <li>Token JWT contém apenas informações essenciais do usuário</li>
+  </ul>
 
-```json
-{
-  "titulo": "Novo artigo",
-  "conteudo": "Conteúdo do artigo"
-}
-```
-
----
-
-### ✏️ Atualizar artigo
-
-```http
-PUT /api/artigos/:id
-```
-
-* ✅ Admin
-* ❌ Editor
-* ❌ Reader
-
----
-
-### 🗑️ Remover artigo
-
-```http
-DELETE /api/artigos/:id
-```
-
-* ✅ Admin
-* ❌ Editor
-* ❌ Reader
-
----
-
-## 🧪 Testes via Postman
-
-Uma **collection do Postman** acompanha o projeto, contendo:
-
-* Login por perfil (Admin, Editor, Reader)
-* Testes de GET, POST, PUT e DELETE
-* Validação de respostas **200, 403 e 401**
-* Organização clara por permissões
-
-Basta importar a collection no Postman e executar os testes.
-
----
-
-## 🔐 Segurança
-
-* Senhas são armazenadas de forma criptografada (bcrypt)
-* Campo `senha` não é exposto em nenhuma resposta da API
-* Controle de acesso implementado com **Guards e Decorators**
-* Token JWT carrega apenas informações essenciais do usuário
-
+</body>
+</html>
