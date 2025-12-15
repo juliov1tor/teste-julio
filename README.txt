@@ -1,8 +1,3 @@
-Perfeito. Vou te entregar um **README humanizado**, com tom profissional, claro para o avaliador, sem cara de texto gerado por IA e focado em **facilitar a avaliação** do projeto.
-
-Você pode colar **direto no README.md** 👇
-
----
 
 # 🧩 API de Artigos com Autenticação e Autorização
 
@@ -159,24 +154,3 @@ Basta importar a collection no Postman e executar os testes.
 * Campo `senha` não é exposto em nenhuma resposta da API
 * Controle de acesso implementado com **Guards e Decorators**
 * Token JWT carrega apenas informações essenciais do usuário
-
----
-
-## 📌 Observações finais
-
-O objetivo do projeto é demonstrar:
-
-* Boas práticas em APIs REST
-* Autenticação e autorização bem definidas
-* Separação de responsabilidades
-* Código organizado e de fácil leitura
-
-Fique à vontade para explorar os endpoints e testar diferentes cenários de permissão.
-
----
-
-Se quiser, no próximo passo eu posso:
-
-* Ajustar o README para inglês 🇺🇸
-* Encurtar para versão “avaliador lê em 2 minutos”
-* Revisar como se fosse um **tech lead avaliando**
