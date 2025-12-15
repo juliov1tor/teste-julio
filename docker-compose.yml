@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:15
+    container_name: teste-julio-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: teste
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: teste-julio-app
+    depends_on:
+      - db
+    env_file:
+      - .env.docker
+    ports:
+      - "3000:3000"
+    command: npm run start:prod
+
+volumes:
+  pgdata:
